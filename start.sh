@@ -1,25 +1,22 @@
-name: Run Main Bot Every 6 Hours
+#!/bin/bash
 
-on:
-  schedule:
-    - cron: '0 */6 * * *'  # প্রতি 6 ঘন্টা
-  workflow_dispatch:       # ম্যানুয়ালি রান করতেও পারবে
+# Main bot repo URL
+BOT_REPO="https://github.com/max2jihad59-create/MAHABUB-CK.git"
 
-jobs:
-  run-bot:
-    runs-on: ubuntu-latest
+# Temporary folder
+TEMP_DIR="temp_bot"
 
-    steps:
-      - name: Checkout Runner
-        uses: actions/checkout@v3
+# Remove old folder if exists
+rm -rf $TEMP_DIR
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
+# Clone main bot repo
+git clone $BOT_REPO $TEMP_DIR
 
-      - name: Install Dependencies
-        run: npm install
+# Move into bot folder
+cd $TEMP_DIR
 
-      - name: Run Main Bot
-        run: bash start.sh
+# Install dependencies
+npm install
+
+# Run bot
+node index.js
