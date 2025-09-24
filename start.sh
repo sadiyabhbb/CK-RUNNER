@@ -1,19 +1,25 @@
-#!/bin/bash
+name: Run Main Bot Every 6 Hours
 
-# Bot এর মূল repo URL
-BOT_REPO="https://github.com/max2jihad59-create/MAHABUB-CK.git"
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # প্রতি 6 ঘন্টা
+  workflow_dispatch:       # ম্যানুয়ালি রান করতেও পারবে
 
-# Bot কোড clone বা pull
-if [ -d "main-bot" ]; then
-  cd main-bot
-  git pull origin main
-else
-  git clone $BOT_REPO main-bot
-  cd main-bot
-fi
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
 
-# Dependencies install
-npm install
+    steps:
+      - name: Checkout Runner
+        uses: actions/checkout@v3
 
-# Bot run
-node index.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Main Bot
+        run: bash start.sh
